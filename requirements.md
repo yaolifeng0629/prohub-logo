@@ -67,20 +67,18 @@
 -   **UI 组件**：Radix UI
 -   **状态管理**：Zustand
 -   **部署平台**：Vercel
+-   **国际化**：i18n
 
 ## 项目结构建议
 
 ```
 prohub-logo-generator/
 ├── components/
-│   ├── LogoCanvas/
-│   ├── ControlPanel/
-│   ├── PresetTemplates/
-│   └── ExportPanel/
 ├── hooks/
 ├── utils/
 ├── styles/
 └── pages/
+└── i18n/
 ```
 
 ## 开发优先级
