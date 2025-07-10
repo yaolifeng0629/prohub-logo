@@ -5,7 +5,7 @@ import { TextControls } from './TextControls';
 import { ColorControls } from './ColorControls';
 import { SizeControls } from './SizeControls';
 import { ExportControls } from './ExportControls';
-import { ActionControls } from './ActionControls';
+// import { ActionControls } from './ActionControls';
 
 export const ControlPanel: React.FC = () => {
   return (
@@ -22,7 +22,7 @@ export const ControlPanel: React.FC = () => {
           <TextControls />
           <ColorControls />
           <SizeControls />
-          <ActionControls />
+          {/* <ActionControls /> */}
         </div>
       </div>
 

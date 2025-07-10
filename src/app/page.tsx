@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Header } from '@/components/Header';
 import { PreviewPanel } from '@/components/PreviewPanel';
 import { ControlPanel } from '@/components/ControlPanel';
 import { Toolbar } from '@/components/Toolbar';
@@ -127,7 +126,7 @@ export default function Home() {
         </div>
 
         {/* Right Panel - Controls */}
-        <div className="w-80 lg:w-96 bg-white border-l border-gray-200 flex flex-col overflow-hidden">
+        <div className="w-96 lg:w-[420px] bg-white border-l border-gray-200 flex flex-col overflow-hidden">
           <ControlPanel />
         </div>
       </div>
