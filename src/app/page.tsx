@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PreviewPanel } from '@/components/PreviewPanel';
 import { ControlPanel } from '@/components/ControlPanel';
 import { Toolbar } from '@/components/Toolbar';
@@ -9,6 +9,7 @@ import { useLogoStore } from '@/store/logoStore';
 
 export default function Home() {
   const { undo, redo, config } = useLogoStore();
+  const [scale, setScale] = useState(1);
 
   // Quick export function
   const quickExport = () => {
@@ -116,12 +117,12 @@ export default function Home() {
         <div className="flex-1 flex flex-col bg-gray-50 relative">
           {/* Top Toolbar */}
           <div className="p-4 bg-white border-b border-gray-200 flex justify-center">
-            <Toolbar />
+            <Toolbar scale={scale} onScaleChange={setScale} />
           </div>
 
           {/* Preview Canvas */}
           <div className="flex-1 flex items-center justify-center p-8">
-            <PreviewPanel />
+            <PreviewPanel scale={scale} />
           </div>
         </div>
 
@@ -135,7 +136,7 @@ export default function Home() {
       <div className="md:hidden flex flex-col h-screen">
         {/* Mobile Preview */}
         <div className="flex-1 bg-gray-50 p-4">
-          <PreviewPanel />
+          <PreviewPanel scale={scale} />
         </div>
 
         {/* Mobile Controls */}
@@ -145,7 +146,7 @@ export default function Home() {
 
         {/* Mobile Toolbar */}
         <div className="p-3 bg-white border-t border-gray-200">
-          <Toolbar />
+          <Toolbar scale={scale} onScaleChange={setScale} />
         </div>
       </div>
 
