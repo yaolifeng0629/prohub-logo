@@ -9,30 +9,26 @@ import { ActionControls } from './ActionControls';
 
 export const ControlPanel: React.FC = () => {
   return (
-    <div className="w-full max-w-md mx-auto lg:mx-0 space-y-6 p-6 bg-white rounded-lg shadow-lg">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">ProHub Logo 生成器</h2>
-        <p className="text-gray-600 text-sm">自定义您的专业 Logo</p>
+    <div className="h-full flex flex-col">
+      {/* Header */}
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-xl font-semibold text-gray-800">Logo 设置</h2>
+        <p className="text-sm text-gray-600 mt-1">自定义您的专业 Logo</p>
       </div>
-      
-      <div className="space-y-6">
-        <TextControls />
-        
-        <div className="border-t border-gray-200 pt-6">
+
+      {/* Controls */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-6 space-y-8">
+          <TextControls />
           <ColorControls />
-        </div>
-        
-        <div className="border-t border-gray-200 pt-6">
           <SizeControls />
-        </div>
-        
-        <div className="border-t border-gray-200 pt-6">
           <ActionControls />
         </div>
-        
-        <div className="border-t border-gray-200 pt-6">
-          <ExportControls />
-        </div>
+      </div>
+
+      {/* Export Section */}
+      <div className="p-6 border-t border-gray-200 bg-gray-50">
+        <ExportControls />
       </div>
     </div>
   );

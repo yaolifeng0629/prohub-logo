@@ -58,50 +58,48 @@ export const Toolbar: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center space-x-2">
-          <h4 className="text-sm font-medium text-gray-700">快速预设:</h4>
-          <div className="flex flex-wrap gap-2">
-            {quickPresets.map((preset, index) => (
-              <button
-                key={index}
-                onClick={() => applyPreset(preset)}
-                className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors"
-              >
-                {preset.name}
-              </button>
-            ))}
-          </div>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-2">
+        <span className="text-sm font-medium text-gray-800">快速预设:</span>
+        <div className="flex space-x-1">
+          {quickPresets.map((preset, index) => (
+            <button
+              key={index}
+              onClick={() => applyPreset(preset)}
+              className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 rounded transition-colors"
+            >
+              {preset.name}
+            </button>
+          ))}
         </div>
-        
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={undo}
-            disabled={!canUndo()}
-            className="px-3 py-1 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            title="撤销 (Ctrl+Z)"
-          >
-            ↶
-          </button>
-          
-          <button
-            onClick={redo}
-            disabled={!canRedo()}
-            className="px-3 py-1 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            title="重做 (Ctrl+Y)"
-          >
-            ↷
-          </button>
-          
-          <button
-            onClick={resetConfig}
-            className="px-3 py-1 text-xs bg-red-500 text-white rounded-md hover:bg-red-600"
-            title="重置所有设置"
-          >
-            🔄 重置
-          </button>
-        </div>
+      </div>
+
+      <div className="flex items-center space-x-1">
+        <button
+          onClick={undo}
+          disabled={!canUndo()}
+          className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+          title="撤销 (Ctrl+Z)"
+        >
+          ↶
+        </button>
+
+        <button
+          onClick={redo}
+          disabled={!canRedo()}
+          className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+          title="重做 (Ctrl+Y)"
+        >
+          ↷
+        </button>
+
+        <button
+          onClick={resetConfig}
+          className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded"
+          title="重置所有设置"
+        >
+          🔄
+        </button>
       </div>
     </div>
   );

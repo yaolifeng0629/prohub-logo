@@ -85,14 +85,27 @@ export const LogoPreview: React.FC<LogoPreviewProps> = ({
   const containerStyle: React.CSSProperties = {
     transform: `scale(${scale})`,
     transformOrigin: 'center',
-    background: showGrid && config.transparentBackground
-      ? 'repeating-conic-gradient(#f0f0f0 0% 25%, transparent 0% 50%) 50% / 20px 20px'
-      : 'transparent',
   };
 
+  const backgroundStyle: React.CSSProperties = showGrid && config.transparentBackground
+    ? {
+        backgroundImage: `
+          linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+          linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+          linear-gradient(-45deg, transparent 75%, #f0f0f0 75%)
+        `,
+        backgroundSize: '20px 20px',
+        backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px'
+      }
+    : {};
+
   return (
-    <div className="flex items-center justify-center p-8">
-      <div style={containerStyle} className="border border-gray-200 rounded-lg overflow-hidden">
+    <div className="flex items-center justify-center">
+      <div
+        style={{...containerStyle, ...backgroundStyle}}
+        className="border border-gray-200 rounded-lg overflow-hidden shadow-sm"
+      >
         <canvas
           ref={canvasRef}
           className="block"

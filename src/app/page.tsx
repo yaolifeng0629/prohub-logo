@@ -110,20 +110,43 @@ export default function Home() {
   }, [undo, redo, config]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <div className="container mx-auto px-4 py-8">
-        <Toolbar />
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Control Panel */}
-          <div className="lg:w-1/3">
-            <ControlPanel />
-          </div>
-
-          {/* Preview Area */}
-          <div className="lg:w-2/3">
+    <div className="min-h-screen bg-white">
+      {/* Desktop Layout */}
+      <div className="hidden md:flex h-screen">
+        {/* Left Panel - Preview Area */}
+        <div className="flex-1 flex flex-col bg-gray-50 relative">
+          {/* Preview Canvas */}
+          <div className="flex-1 flex items-center justify-center p-8">
             <PreviewPanel />
           </div>
+
+          {/* Bottom Toolbar */}
+          <div className="p-4 bg-white border-t border-gray-200">
+            <Toolbar />
+          </div>
+        </div>
+
+        {/* Right Panel - Controls */}
+        <div className="w-80 lg:w-96 bg-white border-l border-gray-200 flex flex-col overflow-hidden">
+          <ControlPanel />
+        </div>
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden flex flex-col h-screen">
+        {/* Mobile Preview */}
+        <div className="flex-1 bg-gray-50 p-4">
+          <PreviewPanel />
+        </div>
+
+        {/* Mobile Controls */}
+        <div className="h-1/2 bg-white border-t border-gray-200 overflow-hidden">
+          <ControlPanel />
+        </div>
+
+        {/* Mobile Toolbar */}
+        <div className="p-3 bg-white border-t border-gray-200">
+          <Toolbar />
         </div>
       </div>
 

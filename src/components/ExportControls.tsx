@@ -199,18 +199,18 @@ export const ExportControls: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-800">导出设置</h3>
+      <h3 className="text-base font-medium text-gray-800">导出 Logo</h3>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-3">
         <div>
-          <label htmlFor="exportFormat" className="block text-sm font-medium text-gray-700 mb-2">
-            导出格式
+          <label htmlFor="exportFormat" className="block text-xs font-medium text-gray-700 mb-1">
+            格式
           </label>
           <select
             id="exportFormat"
             value={exportFormat}
             onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
           >
             <option value="png">PNG</option>
             <option value="jpg">JPG</option>
@@ -221,7 +221,7 @@ export const ExportControls: React.FC = () => {
 
         {(exportFormat === 'jpg' || exportFormat === 'webp') && (
           <div>
-            <label htmlFor="quality" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="quality" className="block text-xs font-medium text-gray-700 mb-1">
               质量: {Math.round(quality * 100)}%
             </label>
             <input
@@ -238,11 +238,11 @@ export const ExportControls: React.FC = () => {
         )}
       </div>
 
-      <div className="flex space-x-3">
+      <div className="space-y-2">
         <button
           onClick={exportLogo}
           disabled={isExporting}
-          className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-4 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
         >
           {isExporting ? '导出中...' : `导出 ${exportFormat.toUpperCase()}`}
         </button>
@@ -250,9 +250,9 @@ export const ExportControls: React.FC = () => {
         <button
           onClick={exportAllFormats}
           disabled={isExporting}
-          className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
         >
-          {isExporting ? '导出中...' : '批量导出'}
+          {isExporting ? '导出中...' : '批量导出所有格式'}
         </button>
       </div>
     </div>

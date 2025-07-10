@@ -8,7 +8,6 @@ const PRESET_SIZES = [
   { label: '128x128', width: 128, height: 128 },
   { label: '256x256', width: 256, height: 256 },
   { label: '512x512', width: 512, height: 512 },
-  { label: '1024x1024', width: 1024, height: 1024 },
 ];
 
 export const SizeControls: React.FC = () => {
@@ -30,44 +29,42 @@ export const SizeControls: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-800">尺寸设置</h3>
-      
+      <h3 className="text-base font-medium text-gray-800">尺寸设置</h3>
+
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          预设尺寸
-        </label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2 mb-3">
           {PRESET_SIZES.map((size) => (
             <button
               key={size.label}
               onClick={() => handlePresetSize(size.width, size.height)}
-              className={`px-3 py-2 text-sm border rounded-md transition-colors ${
+              className={`px-3 py-2 text-sm rounded-md transition-colors ${
                 isPresetSelected(size.width, size.height) && !customSize
-                  ? 'bg-orange-500 text-white border-orange-500'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
               }`}
             >
               {size.label}
             </button>
           ))}
-          <button
-            onClick={() => setCustomSize(true)}
-            className={`px-3 py-2 text-sm border rounded-md transition-colors ${
-              customSize
-                ? 'bg-orange-500 text-white border-orange-500'
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-            }`}
-          >
-            自定义
-          </button>
         </div>
+
+        <button
+          onClick={() => setCustomSize(true)}
+          className={`w-full px-3 py-2 text-sm rounded-md transition-colors ${
+            customSize
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+          }`}
+        >
+          自定义尺寸
+        </button>
       </div>
 
       {customSize && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <label htmlFor="customWidth" className="block text-sm font-medium text-gray-700 mb-2">
-              宽度 (px)
+            <label htmlFor="customWidth" className="block text-xs font-medium text-gray-700 mb-1">
+              宽度
             </label>
             <input
               id="customWidth"
@@ -76,13 +73,13 @@ export const SizeControls: React.FC = () => {
               max="2048"
               value={config.logoSize.width}
               onChange={(e) => handleCustomSize(parseInt(e.target.value) || 256, config.logoSize.height)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
             />
           </div>
-          
+
           <div>
-            <label htmlFor="customHeight" className="block text-sm font-medium text-gray-700 mb-2">
-              高度 (px)
+            <label htmlFor="customHeight" className="block text-xs font-medium text-gray-700 mb-1">
+              高度
             </label>
             <input
               id="customHeight"
@@ -91,15 +88,11 @@ export const SizeControls: React.FC = () => {
               max="2048"
               value={config.logoSize.height}
               onChange={(e) => handleCustomSize(config.logoSize.width, parseInt(e.target.value) || 256)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
             />
           </div>
         </div>
       )}
-
-      <div className="text-sm text-gray-600">
-        当前尺寸: {config.logoSize.width} × {config.logoSize.height} px
-      </div>
     </div>
   );
 };
