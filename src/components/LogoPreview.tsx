@@ -5,13 +5,11 @@ import { useLogoStore } from '@/store/logoStore';
 
 interface LogoPreviewProps {
   scale?: number;
-  showGrid?: boolean;
   onScaleChange?: (scale: number) => void;
 }
 
 export const LogoPreview: React.FC<LogoPreviewProps> = ({
-  scale = 1,
-  showGrid = false
+  scale = 1
 }) => {
   const { config } = useLogoStore();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -87,23 +85,10 @@ export const LogoPreview: React.FC<LogoPreviewProps> = ({
     transformOrigin: 'center',
   };
 
-  const backgroundStyle: React.CSSProperties = showGrid && config.transparentBackground
-    ? {
-        backgroundImage: `
-          linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
-          linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
-          linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
-          linear-gradient(-45deg, transparent 75%, #f0f0f0 75%)
-        `,
-        backgroundSize: '20px 20px',
-        backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px'
-      }
-    : {};
-
   return (
     <div className="flex items-center justify-center">
       <div
-        style={{...containerStyle, ...backgroundStyle}}
+        style={containerStyle}
         className="border border-gray-200 rounded-lg overflow-hidden shadow-sm"
       >
         <canvas

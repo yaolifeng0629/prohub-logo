@@ -12,8 +12,10 @@ export const ControlPanel: React.FC = () => {
     <div className="h-full flex flex-col">
       {/* Header */}
       <div className="p-6 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800">Logo 设置</h2>
-        <p className="text-sm text-gray-600 mt-1">自定义您的专业 Logo</p>
+        <h2 className="text-xl font-semibold text-gray-800">ProHub Logo 生成器</h2>
+        <p className="text-sm text-gray-600 mt-1">
+          免费的在线 Logo 制作工具，支持自定义文字、颜色、字体和尺寸。
+        </p>
       </div>
 
       {/* Controls */}

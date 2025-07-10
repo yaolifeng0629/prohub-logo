@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { PreviewPanel } from '@/components/PreviewPanel';
 import { ControlPanel } from '@/components/ControlPanel';
 import { Toolbar } from '@/components/Toolbar';
-import { HelpModal } from '@/components/HelpModal';
+// import { HelpModal } from '@/components/HelpModal';
 import { useLogoStore } from '@/store/logoStore';
 
 export default function Home() {
@@ -126,7 +126,7 @@ export default function Home() {
         </div>
 
         {/* Right Panel - Controls */}
-        <div className="w-96 lg:w-[420px] bg-white border-l border-gray-200 flex flex-col overflow-hidden">
+        <div className="w-96 lg:w-[500px] bg-white border-l border-gray-200 flex flex-col overflow-hidden">
           <ControlPanel />
         </div>
       </div>
@@ -149,7 +149,7 @@ export default function Home() {
         </div>
       </div>
 
-      <HelpModal />
+      {/* <HelpModal /> */}
     </div>
   );
 }

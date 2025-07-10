@@ -6,7 +6,6 @@ import { useLogoStore } from '@/store/logoStore';
 
 export const PreviewPanel: React.FC = () => {
   const [scale, setScale] = useState(1);
-  const [showGrid, setShowGrid] = useState(true);
   const { config } = useLogoStore();
 
   const scaleOptions = [
@@ -23,17 +22,6 @@ export const PreviewPanel: React.FC = () => {
       {/* Preview Controls */}
       <div className="flex items-center justify-between mb-6 px-4">
         <div className="flex items-center space-x-4">
-          <button
-            onClick={() => setShowGrid(!showGrid)}
-            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-              showGrid
-                ? 'bg-blue-100 text-blue-800 border border-blue-200'
-                : 'bg-gray-100 text-gray-800 border border-gray-200'
-            }`}
-          >
-            {showGrid ? '🔲' : '⬜'} 网格
-          </button>
-
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-700">缩放:</span>
             <select
@@ -57,7 +45,7 @@ export const PreviewPanel: React.FC = () => {
 
       {/* Preview Area */}
       <div className="flex-1 flex items-center justify-center">
-        <LogoPreview scale={scale} showGrid={showGrid && config.transparentBackground} />
+        <LogoPreview scale={scale} />
       </div>
     </div>
   );
