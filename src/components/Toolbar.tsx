@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useLogoStore } from '@/store/logoStore';
+import { ExportControls } from './ExportControls';
 
 export const Toolbar: React.FC = () => {
   const { config, updateConfig, resetConfig, undo, redo, canUndo, canRedo } = useLogoStore();
@@ -74,32 +75,39 @@ export const Toolbar: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex items-center space-x-1">
-        <button
-          onClick={undo}
-          disabled={!canUndo()}
-          className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-          title="撤销 (Ctrl+Z)"
-        >
-          ↶
-        </button>
+      <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-1">
+          <button
+            onClick={undo}
+            disabled={!canUndo()}
+            className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            title="撤销 (Ctrl+Z)"
+          >
+            ↶
+          </button>
 
-        <button
-          onClick={redo}
-          disabled={!canRedo()}
-          className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-          title="重做 (Ctrl+Y)"
-        >
-          ↷
-        </button>
+          <button
+            onClick={redo}
+            disabled={!canRedo()}
+            className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            title="重做 (Ctrl+Y)"
+          >
+            ↷
+          </button>
 
-        <button
-          onClick={resetConfig}
-          className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded"
-          title="重置所有设置"
-        >
-          🔄
-        </button>
+          <button
+            onClick={resetConfig}
+            className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded"
+            title="重置所有设置"
+          >
+            🔄
+          </button>
+        </div>
+
+        {/* Export Button */}
+        <div className="border-l border-gray-300 pl-3">
+          <ExportControls />
+        </div>
       </div>
     </div>
   );

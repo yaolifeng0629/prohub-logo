@@ -114,14 +114,14 @@ export default function Home() {
       <div className="hidden md:flex h-screen">
         {/* Left Panel - Preview Area */}
         <div className="flex-1 flex flex-col bg-gray-50 relative">
+          {/* Top Toolbar */}
+          <div className="p-4 bg-white border-b border-gray-200 flex justify-center">
+            <Toolbar />
+          </div>
+
           {/* Preview Canvas */}
           <div className="flex-1 flex items-center justify-center p-8">
             <PreviewPanel />
-          </div>
-
-          {/* Bottom Toolbar */}
-          <div className="p-4 bg-white border-t border-gray-200">
-            <Toolbar />
           </div>
         </div>
 

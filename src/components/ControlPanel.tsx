@@ -4,7 +4,6 @@ import React from 'react';
 import { TextControls } from './TextControls';
 import { ColorControls } from './ColorControls';
 import { SizeControls } from './SizeControls';
-import { ExportControls } from './ExportControls';
 // import { ActionControls } from './ActionControls';
 
 export const ControlPanel: React.FC = () => {
@@ -26,11 +25,6 @@ export const ControlPanel: React.FC = () => {
           <SizeControls />
           {/* <ActionControls /> */}
         </div>
-      </div>
-
-      {/* Export Section */}
-      <div className="p-6 border-t border-gray-200 bg-gray-50">
-        <ExportControls />
       </div>
     </div>
   );
