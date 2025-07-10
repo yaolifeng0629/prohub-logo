@@ -1,103 +1,133 @@
-import Image from "next/image";
+'use client';
+
+import React, { useEffect } from 'react';
+import { Header } from '@/components/Header';
+import { PreviewPanel } from '@/components/PreviewPanel';
+import { ControlPanel } from '@/components/ControlPanel';
+import { Toolbar } from '@/components/Toolbar';
+import { HelpModal } from '@/components/HelpModal';
+import { useLogoStore } from '@/store/logoStore';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { undo, redo, config } = useLogoStore();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Quick export function
+  const quickExport = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = config.logoSize.width;
+    canvas.height = config.logoSize.height;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw overall background
+    if (!config.transparentBackground) {
+      ctx.fillStyle = config.overallBackgroundColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Calculate text metrics
+    ctx.font = `${config.fontWeight} ${config.fontSize}px ${config.fontFamily}`;
+    const leftTextMetrics = ctx.measureText(config.leftText);
+    const rightTextMetrics = ctx.measureText(config.rightText);
+
+    // Calculate dimensions
+    const leftTextWidth = leftTextMetrics.width;
+    const rightTextWidth = rightTextMetrics.width;
+    const textHeight = config.fontSize;
+
+    // Calculate right box dimensions
+    const rightBoxPadding = 12;
+    const rightBoxWidth = rightTextWidth + rightBoxPadding * 2;
+    const rightBoxHeight = textHeight + rightBoxPadding * 2;
+
+    // Calculate total width and positioning
+    const totalWidth = leftTextWidth + config.spacing + rightBoxWidth;
+    const startX = (canvas.width - totalWidth) / 2;
+    const centerY = canvas.height / 2;
+
+    // Draw right background box
+    const rightBoxX = startX + leftTextWidth + config.spacing;
+    const rightBoxY = centerY - rightBoxHeight / 2;
+
+    ctx.fillStyle = config.backgroundColor;
+    if (config.borderRadius > 0) {
+      // Draw rounded rectangle
+      ctx.beginPath();
+      ctx.roundRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight, config.borderRadius);
+      ctx.fill();
+    } else {
+      ctx.fillRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight);
+    }
+
+    // Draw left text
+    ctx.fillStyle = config.leftTextColor;
+    ctx.textBaseline = 'middle';
+    ctx.fillText(config.leftText, startX, centerY);
+
+    // Draw right text
+    ctx.fillStyle = config.rightTextColor;
+    const rightTextX = rightBoxX + rightBoxPadding;
+    ctx.fillText(config.rightText, rightTextX, centerY);
+
+    // Download
+    canvas.toBlob((blob) => {
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${config.leftText}${config.rightText}-logo.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    }, 'image/png', 0.9);
+  };
+
+  // Add keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'z' && !e.shiftKey) {
+          e.preventDefault();
+          undo();
+        } else if ((e.key === 'y') || (e.key === 'z' && e.shiftKey)) {
+          e.preventDefault();
+          redo();
+        } else if (e.key === 's') {
+          e.preventDefault();
+          quickExport();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [undo, redo, config]);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <div className="container mx-auto px-4 py-8">
+        <Toolbar />
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Control Panel */}
+          <div className="lg:w-1/3">
+            <ControlPanel />
+          </div>
+
+          {/* Preview Area */}
+          <div className="lg:w-2/3">
+            <PreviewPanel />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      <HelpModal />
     </div>
   );
 }
