@@ -7,6 +7,11 @@
 [![Next.js](https://img.shields.io/badge/Next.js-15.3.5-black)](https://nextjs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.0-38B2AC)](https://tailwindcss.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 </div>
+<div align="center">
+
+🔗 **[立即体验 (海外)](https://prohub-logo.vercel.app)** | **[立即体验 (国内)](https://prohub-logo.netlify.app)**
+
+</div>
 
 ProHub Logo 生成器是一个免费的在线工具，用于创建专业的 Logo，支持自定义文字、颜色、字体和样式。基于 Next.js 和现代 Web 技术构建，提供实时预览和多种导出格式，无需用户注册。
 
@@ -46,7 +51,7 @@ ProHub Logo 生成器是一个免费的在线工具，用于创建专业的 Logo
 
 ## 🚀 在线演示
 
-🔗 **[试用 ProHub Logo 生成器](https://your-deployment-url.vercel.app)**
+请访问本文档顶部的链接来体验应用程序。
 
 ## 📸 界面截图
 

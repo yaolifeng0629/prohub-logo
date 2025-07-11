@@ -7,6 +7,12 @@
 [![Next.js](https://img.shields.io/badge/Next.js-15.3.5-black)](https://nextjs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.0-38B2AC)](https://tailwindcss.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 </div>
 
+<div align="center">
+
+🔗 **[Try Now (Global)](https://prohub-logo.vercel.app)** | **[Try Now (China)](https://prohub-logo.netlify.app)**
+
+</div>
+
 ProHub Logo Generator is a free, web-based tool for creating professional logos with customizable text, colors, fonts, and styles. Built with Next.js and modern web technologies, it offers real-time preview and multiple export formats without requiring user registration.
 
 ## ✨ Features
@@ -45,7 +51,7 @@ ProHub Logo Generator is a free, web-based tool for creating professional logos 
 
 ## 🚀 Live Demo
 
-🔗 **[Try ProHub Logo Generator](https://your-deployment-url.vercel.app)**
+Visit the links at the top of this README to try the application.
 
 ## 📸 Screenshots
 
