@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { PreviewPanel } from '@/components/PreviewPanel';
 import { ControlPanel } from '@/components/ControlPanel';
 import { Toolbar } from '@/components/Toolbar';
@@ -12,7 +12,7 @@ export default function Home() {
   const [scale, setScale] = useState(1);
 
   // Quick export function
-  const quickExport = () => {
+  const quickExport = useCallback(() => {
     const canvas = document.createElement('canvas');
     canvas.width = config.logoSize.width;
     canvas.height = config.logoSize.height;
@@ -89,7 +89,7 @@ export default function Home() {
         URL.revokeObjectURL(url);
       }
     }, 'image/png', 0.9);
-  };
+  }, [config]);
 
   // Add keyboard shortcuts
   useEffect(() => {
@@ -110,7 +110,7 @@ export default function Home() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [undo, redo, config]);
+  }, [undo, redo, config, quickExport]);
 
   return (
     <div className="min-h-screen bg-white">
