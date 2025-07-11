@@ -1,0 +1,13 @@
+<svg width="256" height="256" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="#000000"/>
+        <rect x="111.35546875" y="92" width="117.3046875" height="72"
+              fill="#FF8C00" rx="8"/>
+        <text x="27.33984375" y="128" font-family="Arial, sans-serif" font-size="48"
+              font-weight="bold" fill="#FFFFFF" dominant-baseline="middle">
+          Pro
+        </text>
+        <text x="123.35546875" y="128" font-family="Arial, sans-serif" font-size="48"
+              font-weight="bold" fill="#000000" dominant-baseline="middle">
+          Hub
+        </text>
+      </svg>

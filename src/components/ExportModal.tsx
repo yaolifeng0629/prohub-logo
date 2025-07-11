@@ -69,15 +69,18 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
       ctx.fillRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight);
     }
 
+    // Set text baseline for both texts
+    ctx.textBaseline = 'middle';
+
     // Draw left text
     ctx.fillStyle = config.leftTextColor;
-    ctx.textBaseline = 'middle';
     ctx.fillText(config.leftText, startX, centerY);
 
-    // Draw right text
+    // Draw right text (centered within the right box)
     ctx.fillStyle = config.rightTextColor;
     const rightTextX = rightBoxX + rightBoxPadding;
-    ctx.fillText(config.rightText, rightTextX, centerY);
+    const rightTextY = rightBoxY + rightBoxHeight / 2;
+    ctx.fillText(config.rightText, rightTextX, rightTextY);
 
     return canvas;
   };
@@ -113,6 +116,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
     const rightBoxX = startX + leftTextWidth + config.spacing;
     const rightBoxY = centerY - rightBoxHeight / 2;
     const rightTextX = rightBoxX + rightBoxPadding;
+    const rightTextY = rightBoxY + rightBoxHeight / 2;
 
     return `
       <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
@@ -123,7 +127,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
               font-weight="${config.fontWeight}" fill="${config.leftTextColor}" dominant-baseline="middle">
           ${config.leftText}
         </text>
-        <text x="${rightTextX}" y="${centerY}" font-family="${config.fontFamily}" font-size="${config.fontSize}"
+        <text x="${rightTextX}" y="${rightTextY}" font-family="${config.fontFamily}" font-size="${config.fontSize}"
               font-weight="${config.fontWeight}" fill="${config.rightTextColor}" dominant-baseline="middle">
           ${config.rightText}
         </text>

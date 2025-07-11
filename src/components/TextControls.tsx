@@ -77,7 +77,7 @@ export const TextControls: React.FC = () => {
 
           <div>
             <label htmlFor="fontFamily" className="block text-xs font-medium text-gray-700 mb-1">
-              字体族
+              字体
             </label>
             <select
               id="fontFamily"

@@ -68,15 +68,18 @@ export const LogoPreview: React.FC<LogoPreviewProps> = ({
       ctx.fillRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight);
     }
 
+    // Set text baseline for both texts
+    ctx.textBaseline = 'middle';
+
     // Draw left text
     ctx.fillStyle = config.leftTextColor;
-    ctx.textBaseline = 'middle';
     ctx.fillText(config.leftText, startX, centerY);
 
-    // Draw right text
+    // Draw right text (centered within the right box)
     ctx.fillStyle = config.rightTextColor;
     const rightTextX = rightBoxX + rightBoxPadding;
-    ctx.fillText(config.rightText, rightTextX, centerY);
+    const rightTextY = rightBoxY + rightBoxHeight / 2;
+    ctx.fillText(config.rightText, rightTextX, rightTextY);
 
   }, [config]);
 
