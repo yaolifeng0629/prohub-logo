@@ -124,6 +124,24 @@ export default function Home() {
           <div className="flex-1 flex items-center justify-center p-8">
             <PreviewPanel scale={scale} />
           </div>
+
+          {/* Bottom Toolbar */}
+          <div className="p-4 bg-white border-t border-gray-200">
+            <div className="text-center text-sm text-gray-500">
+              <p>
+                Made with ❤️{' '}
+                <a
+                  href="https://yaolifeng.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:text-blue-600 hover:underline transition-colors"
+                >
+                  yaolifeng
+                </a>
+                {' '}| © 版权所有 2025 ProHub Logo 保留的所有权利
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Right Panel - Controls */}
