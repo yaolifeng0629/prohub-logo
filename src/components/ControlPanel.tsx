@@ -8,23 +8,24 @@ import { SizeControls } from './SizeControls';
 
 export const ControlPanel: React.FC = () => {
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800">ProHub Logo 生成器</h2>
-        <p className="text-sm text-gray-600 mt-1">
-          免费的在线 Logo 制作工具，支持自定义文字、颜色、字体和尺寸。
-        </p>
+    <div className="control-panel">
+      <div className="control-panel-header">
+        <div>
+          <h1>ProHub Logo 生成器</h1>
+          <p>即时调整文字、颜色、字型与画布尺寸。</p>
+        </div>
       </div>
 
-      {/* Controls */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-6 space-y-8">
+      <div className="control-panel-scroll">
+        <section className="control-section" aria-labelledby="text-controls-heading">
           <TextControls />
+        </section>
+        <section className="control-section" aria-labelledby="color-controls-heading">
           <ColorControls />
+        </section>
+        <section className="control-section" aria-labelledby="size-controls-heading">
           <SizeControls />
-          {/* <ActionControls /> */}
-        </div>
+        </section>
       </div>
     </div>
   );

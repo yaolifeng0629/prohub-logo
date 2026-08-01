@@ -4,8 +4,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { PreviewPanel } from '@/components/PreviewPanel';
 import { ControlPanel } from '@/components/ControlPanel';
 import { Toolbar } from '@/components/Toolbar';
-// import { HelpModal } from '@/components/HelpModal';
 import { useLogoStore } from '@/store/logoStore';
+import { createLogoCanvas } from '@/lib/logo-renderer';
 
 export default function Home() {
   const { undo, redo, config } = useLogoStore();
@@ -13,68 +13,7 @@ export default function Home() {
 
   // Quick export function
   const quickExport = useCallback(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = config.logoSize.width;
-    canvas.height = config.logoSize.height;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw overall background
-    if (!config.transparentBackground) {
-      ctx.fillStyle = config.overallBackgroundColor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    // Calculate text metrics
-    ctx.font = `${config.fontWeight} ${config.fontSize}px ${config.fontFamily}`;
-    const leftTextMetrics = ctx.measureText(config.leftText);
-    const rightTextMetrics = ctx.measureText(config.rightText);
-
-    // Calculate dimensions
-    const leftTextWidth = leftTextMetrics.width;
-    const rightTextWidth = rightTextMetrics.width;
-    const textHeight = config.fontSize;
-
-    // Calculate right box dimensions
-    const rightBoxPadding = 12;
-    const rightBoxWidth = rightTextWidth + rightBoxPadding * 2;
-    const rightBoxHeight = textHeight + rightBoxPadding * 2;
-
-    // Calculate total width and positioning
-    const totalWidth = leftTextWidth + config.spacing + rightBoxWidth;
-    const startX = (canvas.width - totalWidth) / 2;
-    const centerY = canvas.height / 2;
-
-    // Draw right background box
-    const rightBoxX = startX + leftTextWidth + config.spacing;
-    const rightBoxY = centerY - rightBoxHeight / 2;
-
-    ctx.fillStyle = config.backgroundColor;
-    if (config.borderRadius > 0) {
-      // Draw rounded rectangle
-      ctx.beginPath();
-      ctx.roundRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight, config.borderRadius);
-      ctx.fill();
-    } else {
-      ctx.fillRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight);
-    }
-
-    // Set text baseline for both texts
-    ctx.textBaseline = 'middle';
-
-    // Draw left text
-    ctx.fillStyle = config.leftTextColor;
-    ctx.fillText(config.leftText, startX, centerY);
-
-    // Draw right text (centered within the right box)
-    ctx.fillStyle = config.rightTextColor;
-    const rightTextX = rightBoxX + rightBoxPadding;
-    const rightTextY = rightBoxY + rightBoxHeight / 2;
-    ctx.fillText(config.rightText, rightTextX, rightTextY);
+    const canvas = createLogoCanvas(config);
 
     // Download
     canvas.toBlob((blob) => {
@@ -113,65 +52,31 @@ export default function Home() {
   }, [undo, redo, config, quickExport]);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Desktop Layout */}
-      <div className="hidden md:flex h-screen">
-        {/* Left Panel - Preview Area */}
-        <div className="flex-1 flex flex-col bg-gray-50 relative">
-          {/* Top Toolbar */}
-          <div className="p-4 bg-white border-b border-gray-200 flex justify-center">
-            <Toolbar scale={scale} onScaleChange={setScale} />
-          </div>
+    <main className="logo-app">
+      <section className="workspace" aria-label="Logo preview workspace">
+        <header className="toolbar-shell">
+          <Toolbar scale={scale} onScaleChange={setScale} />
+        </header>
 
-          {/* Preview Canvas */}
-          <div className="flex-1 flex items-center justify-center p-8">
-            <PreviewPanel scale={scale} />
-          </div>
-
-          {/* Bottom Toolbar */}
-          <div className="p-4 bg-white border-t border-gray-200">
-            <div className="text-center text-sm text-gray-500">
-              <p>
-                Made with ❤️{' '}
-                <a
-                  href="https://yaolifeng.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:text-blue-600 hover:underline transition-colors"
-                >
-                  yaolifeng
-                </a>
-                {' '}| © 版权所有 2025 ProHub Logo 保留的所有权利
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Panel - Controls */}
-        <div className="w-96 lg:w-[500px] bg-white border-l border-gray-200 flex flex-col overflow-hidden">
-          <ControlPanel />
-        </div>
-      </div>
-
-      {/* Mobile Layout */}
-      <div className="md:hidden flex flex-col h-screen">
-        {/* Mobile Preview */}
-        <div className="flex-1 bg-gray-50 p-4">
+        <div className="preview-shell">
           <PreviewPanel scale={scale} />
         </div>
 
-        {/* Mobile Controls */}
-        <div className="h-1/2 bg-white border-t border-gray-200 overflow-hidden">
-          <ControlPanel />
-        </div>
+        <footer className="workspace-footer">
+          <p>
+            Made by{' '}
+            <a href="https://yaolifeng.com" target="_blank" rel="noopener noreferrer">
+              yaolifeng
+            </a>
+            <span aria-hidden="true"> · </span>
+            <span>© 2025 ProHub Logo</span>
+          </p>
+        </footer>
+      </section>
 
-        {/* Mobile Toolbar */}
-        <div className="p-3 bg-white border-t border-gray-200">
-          <Toolbar scale={scale} onScaleChange={setScale} />
-        </div>
-      </div>
-
-      {/* <HelpModal /> */}
-    </div>
+      <aside className="editor-shell" aria-label="Logo editor controls">
+        <ControlPanel />
+      </aside>
+    </main>
   );
 }

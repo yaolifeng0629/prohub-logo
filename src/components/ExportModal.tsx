@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Download, X } from 'lucide-react';
 import { useLogoStore } from '@/store/logoStore';
+import { createLogoCanvas, createLogoSvg } from '@/lib/logo-renderer';
 
 type ExportFormat = 'png' | 'jpg' | 'svg' | 'webp';
 
@@ -16,124 +18,20 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
   const [quality, setQuality] = useState(0.9);
   const [isExporting, setIsExporting] = useState(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !isExporting) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isExporting, onClose]);
+
   if (!isOpen) return null;
-
-  const createCanvas = (format: ExportFormat): HTMLCanvasElement => {
-    const canvas = document.createElement('canvas');
-    canvas.width = config.logoSize.width;
-    canvas.height = config.logoSize.height;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('Cannot get canvas context');
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw overall background
-    if (!config.transparentBackground || format !== 'png') {
-      ctx.fillStyle = config.overallBackgroundColor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    // Calculate text metrics
-    ctx.font = `${config.fontWeight} ${config.fontSize}px ${config.fontFamily}`;
-    const leftTextMetrics = ctx.measureText(config.leftText);
-    const rightTextMetrics = ctx.measureText(config.rightText);
-
-    // Calculate dimensions
-    const leftTextWidth = leftTextMetrics.width;
-    const rightTextWidth = rightTextMetrics.width;
-    const textHeight = config.fontSize;
-
-    // Calculate right box dimensions
-    const rightBoxPadding = 12;
-    const rightBoxWidth = rightTextWidth + rightBoxPadding * 2;
-    const rightBoxHeight = textHeight + rightBoxPadding * 2;
-
-    // Calculate total width and positioning
-    const totalWidth = leftTextWidth + config.spacing + rightBoxWidth;
-    const startX = (canvas.width - totalWidth) / 2;
-    const centerY = canvas.height / 2;
-
-    // Draw right background box
-    const rightBoxX = startX + leftTextWidth + config.spacing;
-    const rightBoxY = centerY - rightBoxHeight / 2;
-
-    ctx.fillStyle = config.backgroundColor;
-    if (config.borderRadius > 0) {
-      // Draw rounded rectangle
-      ctx.beginPath();
-      ctx.roundRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight, config.borderRadius);
-      ctx.fill();
-    } else {
-      ctx.fillRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight);
-    }
-
-    // Set text baseline for both texts
-    ctx.textBaseline = 'middle';
-
-    // Draw left text
-    ctx.fillStyle = config.leftTextColor;
-    ctx.fillText(config.leftText, startX, centerY);
-
-    // Draw right text (centered within the right box)
-    ctx.fillStyle = config.rightTextColor;
-    const rightTextX = rightBoxX + rightBoxPadding;
-    const rightTextY = rightBoxY + rightBoxHeight / 2;
-    ctx.fillText(config.rightText, rightTextX, rightTextY);
-
-    return canvas;
-  };
-
-  const createSVG = (): string => {
-    const { width, height } = config.logoSize;
-
-    // Create a temporary canvas to measure text accurately
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-    if (!tempCtx) throw new Error('Cannot get canvas context');
-
-    tempCtx.font = `${config.fontWeight} ${config.fontSize}px ${config.fontFamily}`;
-    const leftTextMetrics = tempCtx.measureText(config.leftText);
-    const rightTextMetrics = tempCtx.measureText(config.rightText);
-
-    // Calculate dimensions
-    const leftTextWidth = leftTextMetrics.width;
-    const rightTextWidth = rightTextMetrics.width;
-    const textHeight = config.fontSize;
-
-    // Calculate right box dimensions
-    const rightBoxPadding = 12;
-    const rightBoxWidth = rightTextWidth + rightBoxPadding * 2;
-    const rightBoxHeight = textHeight + rightBoxPadding * 2;
-
-    // Calculate total width and positioning
-    const totalWidth = leftTextWidth + config.spacing + rightBoxWidth;
-    const startX = (width - totalWidth) / 2;
-    const centerY = height / 2;
-
-    // Calculate right box position
-    const rightBoxX = startX + leftTextWidth + config.spacing;
-    const rightBoxY = centerY - rightBoxHeight / 2;
-    const rightTextX = rightBoxX + rightBoxPadding;
-    const rightTextY = rightBoxY + rightBoxHeight / 2;
-
-    return `
-      <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-        ${!config.transparentBackground ? `<rect width="100%" height="100%" fill="${config.overallBackgroundColor}"/>` : ''}
-        <rect x="${rightBoxX}" y="${rightBoxY}" width="${rightBoxWidth}" height="${rightBoxHeight}"
-              fill="${config.backgroundColor}" rx="${config.borderRadius}"/>
-        <text x="${startX}" y="${centerY}" font-family="${config.fontFamily}" font-size="${config.fontSize}"
-              font-weight="${config.fontWeight}" fill="${config.leftTextColor}" dominant-baseline="middle">
-          ${config.leftText}
-        </text>
-        <text x="${rightTextX}" y="${rightTextY}" font-family="${config.fontFamily}" font-size="${config.fontSize}"
-              font-weight="${config.fontWeight}" fill="${config.rightTextColor}" dominant-baseline="middle">
-          ${config.rightText}
-        </text>
-      </svg>
-    `.trim();
-  };
 
   const downloadFile = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
@@ -167,11 +65,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
 
       for (const format of selectedFormats) {
         if (format === 'svg') {
-          const svgContent = createSVG();
+          const svgContent = createLogoSvg(config);
           const blob = new Blob([svgContent], { type: 'image/svg+xml' });
           downloadFile(blob, `${filename}.svg`);
         } else {
-          const canvas = createCanvas(format);
+          const canvas = createLogoCanvas(config, format);
           await new Promise<void>((resolve) => {
             canvas.toBlob((blob) => {
               if (blob) {
@@ -204,46 +102,49 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
   ];
 
   return (
-    <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50 p-4">
-      <div className="bg-white bg-opacity-95 backdrop-blur-sm rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        {/* Modal Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-800">导出 Logo</h3>
+    <div className="export-modal-backdrop">
+      <div className="export-modal" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
+        <div className="export-modal-header">
+          <div>
+            <h2 id="export-modal-title">导出 Logo</h2>
+            <p>选择所需格式，文件将直接下载到设备。</p>
+          </div>
           <button
+            type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100"
+            className="modal-close-button"
+            aria-label="关闭导出窗口"
+            title="关闭"
           >
-            ×
+            <X size={19} aria-hidden="true" />
           </button>
         </div>
 
-        {/* Modal Content */}
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              选择导出格式
-            </label>
-            <div className="space-y-3">
+        <div className="export-modal-content">
+          <fieldset className="format-fieldset">
+            <legend>选择导出格式</legend>
+            <div className="format-options">
               {formatOptions.map((option) => (
-                <label key={option.value} className="flex items-center space-x-3 cursor-pointer p-2 rounded-md hover:bg-gray-50">
+                <label key={option.value} className="format-option">
                   <input
+                    id={`export-${option.value}`}
                     type="checkbox"
                     checked={selectedFormats.includes(option.value)}
                     onChange={() => handleFormatToggle(option.value)}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    className="format-checkbox"
                   />
-                  <div className="flex-1">
-                    <span className="text-sm font-medium text-gray-900">{option.label}</span>
-                    <span className="text-xs text-gray-500 ml-2">{option.description}</span>
+                  <div className="format-copy">
+                    <span>{option.label}</span>
+                    <small>{option.description}</small>
                   </div>
                 </label>
               ))}
             </div>
-          </div>
+          </fieldset>
 
           {(selectedFormats.includes('jpg') || selectedFormats.includes('webp')) && (
-            <div>
-              <label htmlFor="quality" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="quality-control">
+              <label htmlFor="quality" className="range-label">
                 质量: {Math.round(quality * 100)}%
               </label>
               <input
@@ -254,26 +155,28 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
                 step="0.1"
                 value={quality}
                 onChange={(e) => setQuality(parseFloat(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                className="control-range"
               />
             </div>
           )}
         </div>
 
-        {/* Modal Footer */}
-        <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50">
+        <div className="export-modal-footer">
           <button
+            type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="secondary-button"
           >
             取消
           </button>
           <button
+            type="button"
             onClick={exportSelectedFormats}
             disabled={isExporting || selectedFormats.length === 0}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="primary-button"
           >
-            {isExporting ? '导出中...' : `导出 (${selectedFormats.length})`}
+            <Download size={17} aria-hidden="true" />
+            {isExporting ? '导出中...' : `导出 ${selectedFormats.length} 种格式`}
           </button>
         </div>
       </div>

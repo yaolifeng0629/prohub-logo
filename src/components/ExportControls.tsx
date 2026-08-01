@@ -1,18 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Download } from 'lucide-react';
 import { ExportModal } from './ExportModal';
 
 export const ExportControls: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div>
+    <div className="export-control">
       <button
+        type="button"
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 bg-blue-600 text-white font-medium text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors shadow-sm"
+        className="export-button"
       >
-        导出 Logo
+        <Download size={17} strokeWidth={2.25} aria-hidden="true" />
+        <span>导出</span>
       </button>
 
       <ExportModal

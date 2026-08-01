@@ -28,19 +28,20 @@ export const SizeControls: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-base font-medium text-gray-800">尺寸设置</h3>
+    <div className="control-group">
+      <h2 id="size-controls-heading" className="section-title">尺寸设置</h2>
 
-      <div>
-        <div className="grid grid-cols-2 gap-2 mb-3">
+      <div className="size-control-stack">
+        <div className="size-presets">
           {PRESET_SIZES.map((size) => (
             <button
               key={size.label}
+              type="button"
               onClick={() => handlePresetSize(size.width, size.height)}
-              className={`px-3 py-2 text-sm rounded-md transition-colors ${
+              className={`size-preset ${
                 isPresetSelected(size.width, size.height) && !customSize
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                  ? 'is-selected'
+                  : ''
               }`}
             >
               {size.label}
@@ -49,11 +50,12 @@ export const SizeControls: React.FC = () => {
         </div>
 
         <button
+          type="button"
           onClick={() => setCustomSize(true)}
-          className={`w-full px-3 py-2 text-sm rounded-md transition-colors ${
+          className={`custom-size-button ${
             customSize
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+              ? 'is-selected'
+              : ''
           }`}
         >
           自定义尺寸
@@ -61,9 +63,9 @@ export const SizeControls: React.FC = () => {
       </div>
 
       {customSize && (
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label htmlFor="customWidth" className="block text-xs font-medium text-gray-700 mb-1">
+        <div className="field-grid">
+          <div className="field">
+            <label htmlFor="customWidth" className="field-label">
               宽度
             </label>
             <input
@@ -73,12 +75,12 @@ export const SizeControls: React.FC = () => {
               max="2048"
               value={config.logoSize.width}
               onChange={(e) => handleCustomSize(parseInt(e.target.value) || 256, config.logoSize.height)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+              className="control-input"
             />
           </div>
 
-          <div>
-            <label htmlFor="customHeight" className="block text-xs font-medium text-gray-700 mb-1">
+          <div className="field">
+            <label htmlFor="customHeight" className="field-label">
               高度
             </label>
             <input
@@ -88,7 +90,7 @@ export const SizeControls: React.FC = () => {
               max="2048"
               value={config.logoSize.height}
               onChange={(e) => handleCustomSize(config.logoSize.width, parseInt(e.target.value) || 256)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+              className="control-input"
             />
           </div>
         </div>

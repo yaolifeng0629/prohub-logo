@@ -2,10 +2,10 @@
 
 import React, { useRef, useEffect } from 'react';
 import { useLogoStore } from '@/store/logoStore';
+import { drawLogo } from '@/lib/logo-renderer';
 
 interface LogoPreviewProps {
   scale?: number;
-  onScaleChange?: (scale: number) => void;
 }
 
 export const LogoPreview: React.FC<LogoPreviewProps> = ({
@@ -21,85 +21,25 @@ export const LogoPreview: React.FC<LogoPreviewProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
     canvas.width = config.logoSize.width;
     canvas.height = config.logoSize.height;
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw overall background
-    if (!config.transparentBackground) {
-      ctx.fillStyle = config.overallBackgroundColor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    // Calculate text metrics
-    ctx.font = `${config.fontWeight} ${config.fontSize}px ${config.fontFamily}`;
-    const leftTextMetrics = ctx.measureText(config.leftText);
-    const rightTextMetrics = ctx.measureText(config.rightText);
-
-    // Calculate dimensions
-    const leftTextWidth = leftTextMetrics.width;
-    const rightTextWidth = rightTextMetrics.width;
-    const textHeight = config.fontSize;
-
-    // Calculate right box dimensions
-    const rightBoxPadding = 12;
-    const rightBoxWidth = rightTextWidth + rightBoxPadding * 2;
-    const rightBoxHeight = textHeight + rightBoxPadding * 2;
-
-    // Calculate total width and positioning
-    const totalWidth = leftTextWidth + config.spacing + rightBoxWidth;
-    const startX = (canvas.width - totalWidth) / 2;
-    const centerY = canvas.height / 2;
-
-    // Draw right background box
-    const rightBoxX = startX + leftTextWidth + config.spacing;
-    const rightBoxY = centerY - rightBoxHeight / 2;
-
-    ctx.fillStyle = config.backgroundColor;
-    if (config.borderRadius > 0) {
-      // Draw rounded rectangle
-      ctx.beginPath();
-      ctx.roundRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight, config.borderRadius);
-      ctx.fill();
-    } else {
-      ctx.fillRect(rightBoxX, rightBoxY, rightBoxWidth, rightBoxHeight);
-    }
-
-    // Set text baseline for both texts
-    ctx.textBaseline = 'middle';
-
-    // Draw left text
-    ctx.fillStyle = config.leftTextColor;
-    ctx.fillText(config.leftText, startX, centerY);
-
-    // Draw right text (centered within the right box)
-    ctx.fillStyle = config.rightTextColor;
-    const rightTextX = rightBoxX + rightBoxPadding;
-    const rightTextY = rightBoxY + rightBoxHeight / 2;
-    ctx.fillText(config.rightText, rightTextX, rightTextY);
-
+    drawLogo(ctx, config);
   }, [config]);
 
-  const containerStyle: React.CSSProperties = {
-    transform: `scale(${scale})`,
-    transformOrigin: 'center',
-  };
+  const scaledWidth = config.logoSize.width * scale;
+  const scaledHeight = config.logoSize.height * scale;
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="logo-preview" aria-label="Logo preview">
       <div
-        style={containerStyle}
-        className="border border-gray-200 rounded-lg overflow-hidden shadow-sm"
+        className="logo-canvas-frame"
+        style={{ width: scaledWidth, height: scaledHeight }}
       >
         <canvas
           ref={canvasRef}
-          className="block"
+          className="logo-canvas"
           style={{
-            width: config.logoSize.width,
-            height: config.logoSize.height,
+            aspectRatio: `${config.logoSize.width} / ${config.logoSize.height}`,
           }}
         />
       </div>

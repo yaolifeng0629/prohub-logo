@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
+import { Check } from 'lucide-react';
 import { useLogoStore } from '@/store/logoStore';
 
 interface ColorPickerProps {
@@ -14,33 +15,38 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ label, color, onChange }) => 
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative">
-      <label className="block text-xs font-medium text-gray-700 mb-1">
+    <div className="color-field">
+      <label className="field-label">
         {label}
       </label>
-      <div className="flex items-center space-x-2">
+      <div className="color-control-row">
         <button
+          type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-8 h-8 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+          className="color-swatch-button"
           style={{ backgroundColor: color }}
+          aria-label={`选择${label}颜色`}
+          aria-expanded={isOpen}
         />
         <input
           type="text"
           value={color}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          className="color-input"
           placeholder="#000000"
         />
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 z-50 mt-2 p-3 bg-white border border-gray-200 rounded-lg shadow-lg">
+        <div className="color-picker-popover">
           <HexColorPicker color={color} onChange={onChange} />
           <button
+            type="button"
             onClick={() => setIsOpen(false)}
-            className="mt-2 w-full px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
+            className="color-picker-close"
           >
-            关闭
+            <Check size={15} aria-hidden="true" />
+            完成
           </button>
         </div>
       )}
@@ -52,10 +58,10 @@ export const ColorControls: React.FC = () => {
   const { config, updateConfig } = useLogoStore();
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-base font-medium text-gray-800">颜色设置</h3>
+    <div className="control-group">
+      <h2 id="color-controls-heading" className="section-title">颜色设置</h2>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="color-grid">
         <ColorPicker
           label="左侧文字"
           color={config.leftTextColor}
@@ -81,15 +87,15 @@ export const ColorControls: React.FC = () => {
         />
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="checkbox-row">
         <input
           id="transparentBackground"
           type="checkbox"
           checked={config.transparentBackground}
           onChange={(e) => updateConfig({ transparentBackground: e.target.checked })}
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+          className="control-checkbox"
         />
-        <label htmlFor="transparentBackground" className="text-xs text-gray-700">
+        <label htmlFor="transparentBackground" className="checkbox-label">
           透明背景（仅PNG格式）
         </label>
       </div>
