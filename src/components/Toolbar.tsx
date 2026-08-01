@@ -1,18 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown, Redo2, RotateCcw, Undo2 } from 'lucide-react';
-import { useLogoStore } from '@/store/logoStore';
+import { ChevronDown, Columns2, Redo2, RotateCcw, Undo2 } from 'lucide-react';
+import { LogoConfig, useLogoStore } from '@/store/logoStore';
 import { ExportControls } from './ExportControls';
 
 interface ToolbarProps {
     scale?: number;
     onScaleChange?: (scale: number) => void;
+    onComparisonChange?: (config: LogoConfig | null) => void;
 }
 
-export const Toolbar: React.FC<ToolbarProps> = ({ scale = 1, onScaleChange }) => {
+export const Toolbar: React.FC<ToolbarProps> = ({ scale = 1, onScaleChange, onComparisonChange }) => {
     const { config, updateConfig, resetConfig, undo, redo, canUndo, canRedo } = useLogoStore();
     const [showPresets, setShowPresets] = useState(false);
+    const [previousConfig, setPreviousConfig] = useState<LogoConfig | null>(null);
+    const [isComparing, setIsComparing] = useState(false);
 
     const scaleOptions = [
         { label: '25%', value: 0.25 },
@@ -71,30 +74,85 @@ export const Toolbar: React.FC<ToolbarProps> = ({ scale = 1, onScaleChange }) =>
     ];
 
     const applyPreset = (preset: (typeof quickPresets)[0]) => {
+        setPreviousConfig(config);
+        clearComparison();
         updateConfig(preset.config);
     };
 
+    const clearComparison = () => {
+        setIsComparing(false);
+        onComparisonChange?.(null);
+    };
+
+    const toggleComparison = () => {
+        if (!previousConfig) return;
+
+        const nextComparing = !isComparing;
+        setIsComparing(nextComparing);
+        onComparisonChange?.(nextComparing ? previousConfig : null);
+    };
+
+    const handleUndo = () => {
+        clearComparison();
+        undo();
+    };
+
+    const handleRedo = () => {
+        clearComparison();
+        redo();
+    };
+
+    const handleReset = () => {
+        clearComparison();
+        setPreviousConfig(null);
+        resetConfig();
+    };
+
+    const isPresetActive = (preset: (typeof quickPresets)[0]) => (
+        config.leftText === preset.config.leftText
+        && config.rightText === preset.config.rightText
+        && config.backgroundColor === preset.config.backgroundColor
+        && config.leftTextColor === preset.config.leftTextColor
+        && config.rightTextColor === preset.config.rightTextColor
+        && config.overallBackgroundColor === preset.config.overallBackgroundColor
+    );
+
     return (
         <div className="toolbar">
-            <div className="toolbar-presets" aria-label="Quick presets">
-                <span className="toolbar-label">快速预设</span>
+            <div className="toolbar-presets" aria-label="快速预设">
                 <div className="preset-list">
                     {quickPresets.map((preset) => (
                         <button
                             key={preset.name}
                             type="button"
                             onClick={() => applyPreset(preset)}
-                            className="preset-button"
+                            className={`preset-button ${isPresetActive(preset) ? 'is-active' : ''}`}
+                            aria-pressed={isPresetActive(preset)}
                         >
-                            <span className="preset-swatch" style={{ backgroundColor: preset.config.backgroundColor }} aria-hidden="true" />
-                            {preset.name}
+                            <span className="preset-thumbnail" style={{ backgroundColor: preset.config.overallBackgroundColor }} aria-hidden="true">
+                                <span className="preset-thumbnail-left" style={{ color: preset.config.leftTextColor }}>P</span>
+                                <span className="preset-thumbnail-right" style={{ backgroundColor: preset.config.backgroundColor, color: preset.config.rightTextColor }}>H</span>
+                            </span>
+                            <span className="preset-copy">{preset.name}</span>
                         </button>
                     ))}
+                    {previousConfig && (
+                        <button
+                            type="button"
+                            onClick={toggleComparison}
+                            className={`compare-button ${isComparing ? 'is-active' : ''}`}
+                            aria-pressed={isComparing}
+                            title={isComparing ? '显示当前方案' : '对照原始方案'}
+                        >
+                            <Columns2 size={15} aria-hidden="true" />
+                            <span>{isComparing ? '显示当前' : '对照原方案'}</span>
+                        </button>
+                    )}
                 </div>
             </div>
 
             <div className="toolbar-view">
-                <label className="toolbar-select-label" htmlFor="preview-scale">缩放</label>
+                <label className="toolbar-select-label" htmlFor="preview-scale">画布缩放</label>
                 <select
                     id="preview-scale"
                     value={scale}
@@ -114,13 +172,13 @@ export const Toolbar: React.FC<ToolbarProps> = ({ scale = 1, onScaleChange }) =>
 
             <div className="toolbar-actions">
                 <div className="history-actions" aria-label="History controls">
-                    <button type="button" onClick={undo} disabled={!canUndo()} className="icon-button" aria-label="撤销" title="撤销 (Ctrl+Z)">
+                    <button type="button" onClick={handleUndo} disabled={!canUndo()} className="icon-button" aria-label="撤销" title="撤销 (Ctrl+Z)">
                         <Undo2 size={17} strokeWidth={2} />
                     </button>
-                    <button type="button" onClick={redo} disabled={!canRedo()} className="icon-button" aria-label="重做" title="重做 (Ctrl+Y)">
+                    <button type="button" onClick={handleRedo} disabled={!canRedo()} className="icon-button" aria-label="重做" title="重做 (Ctrl+Y)">
                         <Redo2 size={17} strokeWidth={2} />
                     </button>
-                    <button type="button" onClick={resetConfig} className="icon-button" aria-label="重置所有设置" title="重置所有设置">
+                    <button type="button" onClick={handleReset} className="icon-button" aria-label="重置所有设置" title="重置所有设置">
                         <RotateCcw size={17} strokeWidth={2} />
                     </button>
                 </div>
@@ -149,12 +207,29 @@ export const Toolbar: React.FC<ToolbarProps> = ({ scale = 1, onScaleChange }) =>
                                         applyPreset(preset);
                                         setShowPresets(false);
                                     }}
-                                    className="preset-menu-item"
+                                    className={`preset-menu-item ${isPresetActive(preset) ? 'is-active' : ''}`}
                                 >
-                                    <span className="preset-swatch" style={{ backgroundColor: preset.config.backgroundColor }} aria-hidden="true" />
+                                    <span className="preset-thumbnail" style={{ backgroundColor: preset.config.overallBackgroundColor }} aria-hidden="true">
+                                        <span className="preset-thumbnail-left" style={{ color: preset.config.leftTextColor }}>P</span>
+                                        <span className="preset-thumbnail-right" style={{ backgroundColor: preset.config.backgroundColor, color: preset.config.rightTextColor }}>H</span>
+                                    </span>
                                     {preset.name}
                                 </button>
                             ))}
+                            {previousConfig && (
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    onClick={() => {
+                                        toggleComparison();
+                                        setShowPresets(false);
+                                    }}
+                                    className={`compare-menu-item ${isComparing ? 'is-active' : ''}`}
+                                >
+                                    <Columns2 size={15} aria-hidden="true" />
+                                    {isComparing ? '显示当前方案' : '对照原方案'}
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>

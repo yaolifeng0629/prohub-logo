@@ -13,6 +13,7 @@ export const ExportControls: React.FC = () => {
         type="button"
         onClick={() => setIsModalOpen(true)}
         className="export-button"
+        aria-label="导出 Logo"
       >
         <Download size={17} strokeWidth={2.25} aria-hidden="true" />
         <span>导出</span>

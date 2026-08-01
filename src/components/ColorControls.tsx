@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
-import { Check } from 'lucide-react';
+import { Check, Palette } from 'lucide-react';
 import { useLogoStore } from '@/store/logoStore';
 
 interface ColorPickerProps {
@@ -59,7 +59,10 @@ export const ColorControls: React.FC = () => {
 
   return (
     <div className="control-group">
-      <h2 id="color-controls-heading" className="section-title">颜色设置</h2>
+      <div className="section-heading">
+        <Palette size={17} aria-hidden="true" />
+        <h2 id="color-controls-heading" className="section-title">色彩</h2>
+      </div>
 
       <div className="color-grid">
         <ColorPicker

@@ -4,12 +4,13 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { PreviewPanel } from '@/components/PreviewPanel';
 import { ControlPanel } from '@/components/ControlPanel';
 import { Toolbar } from '@/components/Toolbar';
-import { useLogoStore } from '@/store/logoStore';
+import { LogoConfig, useLogoStore } from '@/store/logoStore';
 import { createLogoCanvas } from '@/lib/logo-renderer';
 
 export default function Home() {
   const { undo, redo, config } = useLogoStore();
   const [scale, setScale] = useState(1);
+  const [comparisonConfig, setComparisonConfig] = useState<LogoConfig | null>(null);
 
   // Quick export function
   const quickExport = useCallback(() => {
@@ -55,21 +56,35 @@ export default function Home() {
     <main className="logo-app">
       <section className="workspace" aria-label="Logo preview workspace">
         <header className="toolbar-shell">
-          <Toolbar scale={scale} onScaleChange={setScale} />
+          <div className="brand-lockup" aria-label="ProHub Logo Studio">
+            <span className="brand-mark" aria-hidden="true">
+              <i />
+              <i />
+            </span>
+            <span className="brand-copy">
+              <strong>PROHUB</strong>
+              <small>LOGO STUDIO</small>
+            </span>
+          </div>
+          <Toolbar
+            scale={scale}
+            onScaleChange={setScale}
+            onComparisonChange={setComparisonConfig}
+          />
         </header>
 
         <div className="preview-shell">
-          <PreviewPanel scale={scale} />
+          <PreviewPanel scale={scale} comparisonConfig={comparisonConfig ?? undefined} />
         </div>
 
         <footer className="workspace-footer">
           <p>
-            Made by{' '}
+            Crafted by{' '}
             <a href="https://yaolifeng.com" target="_blank" rel="noopener noreferrer">
               yaolifeng
             </a>
-            <span aria-hidden="true"> · </span>
-            <span>© 2025 ProHub Logo</span>
+            <span aria-hidden="true"> / </span>
+            <span>ProHub Logo Studio</span>
           </p>
         </footer>
       </section>

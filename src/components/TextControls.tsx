@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Type } from 'lucide-react';
 import { useLogoStore } from '@/store/logoStore';
 
 export const TextControls: React.FC = () => {
@@ -8,7 +9,10 @@ export const TextControls: React.FC = () => {
 
   return (
     <div className="control-group">
-      <h2 id="text-controls-heading" className="section-title">文字设置</h2>
+      <div className="section-heading">
+        <Type size={17} aria-hidden="true" />
+        <h2 id="text-controls-heading" className="section-title">文字</h2>
+      </div>
 
       <div className="field-grid">
         <div className="field">

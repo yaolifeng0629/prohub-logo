@@ -19,8 +19,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: "light",
-  themeColor: "#f3f6fb",
+  colorScheme: "dark",
+  themeColor: "#1b1c1a",
   viewportFit: "cover",
 };
 
@@ -34,6 +34,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          id="impeccable-direction-contract"
+          type="application/json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              thesis: 'A focused identity workbench with the live mark as the only hero, not a generic settings sidebar.',
+              world: 'Graphite studio field, paper editor surface, coral operational accent, and preview-led preset rails.',
+              story: 'Visitors compose a two-part mark, compare its live canvas, then export the exact file they need.',
+              firstViewport: 'Desktop holds the staged logo canvas and full editor together; mobile keeps the canvas visible above a compact command strip.',
+              form: 'Candidate 3, identity preset rail with focus states; seed 50722f76.',
+              finish: 'unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md',
+            }),
+          }}
+        />
         {children}
       </body>
     </html>

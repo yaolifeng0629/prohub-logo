@@ -4,15 +4,14 @@ import React from 'react';
 import { TextControls } from './TextControls';
 import { ColorControls } from './ColorControls';
 import { SizeControls } from './SizeControls';
-// import { ActionControls } from './ActionControls';
+import { ActionControls } from './ActionControls';
 
 export const ControlPanel: React.FC = () => {
   return (
     <div className="control-panel">
       <div className="control-panel-header">
         <div>
-          <h1>ProHub Logo 生成器</h1>
-          <p>即时调整文字、颜色、字型与画布尺寸。</p>
+          <h1>编辑标记</h1>
         </div>
       </div>
 
@@ -25,6 +24,9 @@ export const ControlPanel: React.FC = () => {
         </section>
         <section className="control-section" aria-labelledby="size-controls-heading">
           <SizeControls />
+        </section>
+        <section className="control-section shortcut-section" aria-label="快捷操作">
+          <ActionControls />
         </section>
       </div>
     </div>

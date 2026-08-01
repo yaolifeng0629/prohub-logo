@@ -1,17 +1,20 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { useLogoStore } from '@/store/logoStore';
+import { LogoConfig, useLogoStore } from '@/store/logoStore';
 import { drawLogo } from '@/lib/logo-renderer';
 
 interface LogoPreviewProps {
   scale?: number;
+  config?: LogoConfig;
 }
 
 export const LogoPreview: React.FC<LogoPreviewProps> = ({
-  scale = 1
+  scale = 1,
+  config: previewConfig,
 }) => {
-  const { config } = useLogoStore();
+  const { config: storeConfig } = useLogoStore();
+  const config = previewConfig ?? storeConfig;
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -28,10 +31,27 @@ export const LogoPreview: React.FC<LogoPreviewProps> = ({
 
   const scaledWidth = config.logoSize.width * scale;
   const scaledHeight = config.logoSize.height * scale;
+  const canvasKey = [
+    config.leftText,
+    config.rightText,
+    config.fontSize,
+    config.fontWeight,
+    config.fontFamily,
+    config.leftTextColor,
+    config.rightTextColor,
+    config.backgroundColor,
+    config.overallBackgroundColor,
+    config.logoSize.width,
+    config.logoSize.height,
+    config.borderRadius,
+    config.spacing,
+    config.transparentBackground,
+  ].join('|');
 
   return (
     <div className="logo-preview" aria-label="Logo preview">
       <div
+        key={canvasKey}
         className="logo-canvas-frame"
         style={{ width: scaledWidth, height: scaledHeight }}
       >

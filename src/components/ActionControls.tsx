@@ -1,13 +1,16 @@
 'use client';
 
 import React from 'react';
-import { CornerDownLeft, Redo2, Undo2 } from 'lucide-react';
+import { Command, CornerDownLeft, Redo2, Undo2 } from 'lucide-react';
 
 
 export const ActionControls: React.FC = () => {
   return (
     <div className="shortcut-panel">
-      <h2 className="section-title">快捷键</h2>
+      <div className="section-heading">
+        <Command size={17} aria-hidden="true" />
+        <h2 className="section-title">快捷操作</h2>
+      </div>
 
       <div className="shortcut-list">
         <div className="shortcut-row">

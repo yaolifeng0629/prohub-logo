@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Frame } from 'lucide-react';
 import { useLogoStore } from '@/store/logoStore';
 
 const PRESET_SIZES = [
@@ -29,7 +30,10 @@ export const SizeControls: React.FC = () => {
 
   return (
     <div className="control-group">
-      <h2 id="size-controls-heading" className="section-title">尺寸设置</h2>
+      <div className="section-heading">
+        <Frame size={17} aria-hidden="true" />
+        <h2 id="size-controls-heading" className="section-title">画布</h2>
+      </div>
 
       <div className="size-control-stack">
         <div className="size-presets">
@@ -44,7 +48,8 @@ export const SizeControls: React.FC = () => {
                   : ''
               }`}
             >
-              {size.label}
+              <span className="size-preset-shape" aria-hidden="true" />
+              <span>{size.label}</span>
             </button>
           ))}
         </div>
