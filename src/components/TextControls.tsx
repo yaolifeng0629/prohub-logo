@@ -1,16 +1,21 @@
 'use client';
 
 import React from 'react';
-import { Type } from 'lucide-react';
 import { useLogoStore } from '@/store/logoStore';
 
-export const TextControls: React.FC = () => {
+interface Props {
+  sectionNumber?: number;
+}
+
+export const TextControls: React.FC<Props> = ({ sectionNumber }) => {
   const { config, updateConfig } = useLogoStore();
 
   return (
     <div className="control-group">
       <div className="section-heading">
-        <Type size={17} aria-hidden="true" />
+        {sectionNumber != null && (
+          <span className="section-number" aria-hidden="true">{String(sectionNumber).padStart(2, '0')}</span>
+        )}
         <h2 id="text-controls-heading" className="section-title">文字</h2>
       </div>
 
@@ -49,7 +54,8 @@ export const TextControls: React.FC = () => {
       <div className="control-stack">
         <div className="field">
           <label htmlFor="fontSize" className="range-label">
-            字体大小: {config.fontSize}px
+            <span>字体大小</span>
+            <output>{config.fontSize}px</output>
           </label>
           <input
             id="fontSize"
@@ -101,7 +107,8 @@ export const TextControls: React.FC = () => {
         <div className="field-grid">
           <div className="field">
             <label htmlFor="spacing" className="range-label">
-              间距: {config.spacing}px
+              <span>间距</span>
+              <output>{config.spacing}px</output>
             </label>
             <input
               id="spacing"
@@ -116,7 +123,8 @@ export const TextControls: React.FC = () => {
 
           <div className="field">
             <label htmlFor="borderRadius" className="range-label">
-              圆角: {config.borderRadius}px
+              <span>圆角</span>
+              <output>{config.borderRadius}px</output>
             </label>
             <input
               id="borderRadius"

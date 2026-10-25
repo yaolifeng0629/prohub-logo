@@ -1,0 +1,6 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ProHub">
+  <rect width="256" height="256" fill="#111111"/>
+  <text x="24" y="130" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="bold" fill="#FAFAFA" dominant-baseline="middle">P</text>
+  <rect x="100" y="62" width="132" height="132" rx="16" fill="#D25611"/>
+  <text x="131" y="130" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="bold" fill="#FFFFFF" dominant-baseline="middle">H</text>
+</svg>

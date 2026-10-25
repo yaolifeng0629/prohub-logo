@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
-import { Check, Palette } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useLogoStore } from '@/store/logoStore';
 
 interface ColorPickerProps {
@@ -54,13 +54,19 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ label, color, onChange }) => 
   );
 };
 
-export const ColorControls: React.FC = () => {
+interface Props {
+  sectionNumber?: number;
+}
+
+export const ColorControls: React.FC<Props> = ({ sectionNumber }) => {
   const { config, updateConfig } = useLogoStore();
 
   return (
     <div className="control-group">
       <div className="section-heading">
-        <Palette size={17} aria-hidden="true" />
+        {sectionNumber != null && (
+          <span className="section-number" aria-hidden="true">{String(sectionNumber).padStart(2, '0')}</span>
+        )}
         <h2 id="color-controls-heading" className="section-title">色彩</h2>
       </div>
 

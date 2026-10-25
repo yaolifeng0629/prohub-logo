@@ -6,25 +6,14 @@ import { LogoConfig, useLogoStore } from '@/store/logoStore';
 import { ExportControls } from './ExportControls';
 
 interface ToolbarProps {
-    scale?: number;
-    onScaleChange?: (scale: number) => void;
     onComparisonChange?: (config: LogoConfig | null) => void;
 }
 
-export const Toolbar: React.FC<ToolbarProps> = ({ scale = 1, onScaleChange, onComparisonChange }) => {
+export const Toolbar: React.FC<ToolbarProps> = ({ onComparisonChange }) => {
     const { config, updateConfig, resetConfig, undo, redo, canUndo, canRedo } = useLogoStore();
     const [showPresets, setShowPresets] = useState(false);
     const [previousConfig, setPreviousConfig] = useState<LogoConfig | null>(null);
     const [isComparing, setIsComparing] = useState(false);
-
-    const scaleOptions = [
-        { label: '25%', value: 0.25 },
-        { label: '50%', value: 0.5 },
-        { label: '75%', value: 0.75 },
-        { label: '100%', value: 1 },
-        { label: '150%', value: 1.5 },
-        { label: '200%', value: 2 },
-    ];
 
     const quickPresets = [
         {
@@ -32,10 +21,10 @@ export const Toolbar: React.FC<ToolbarProps> = ({ scale = 1, onScaleChange, onCo
             config: {
                 leftText: 'Pro',
                 rightText: 'Hub',
-                backgroundColor: '#FF8C00',
-                leftTextColor: '#FFFFFF',
-                rightTextColor: '#000000',
-                overallBackgroundColor: '#000000',
+                backgroundColor: '#D25611',
+                leftTextColor: '#FAFAFA',
+                rightTextColor: '#FFFFFF',
+                overallBackgroundColor: '#111111',
             },
         },
         {
@@ -149,25 +138,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({ scale = 1, onScaleChange, onCo
                         </button>
                     )}
                 </div>
-            </div>
-
-            <div className="toolbar-view">
-                <label className="toolbar-select-label" htmlFor="preview-scale">画布缩放</label>
-                <select
-                    id="preview-scale"
-                    value={scale}
-                    onChange={e => onScaleChange?.(parseFloat(e.target.value))}
-                    className="toolbar-select"
-                >
-                    {scaleOptions.map(option => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
-                <output className="canvas-size" aria-label="Logo canvas size">
-                    {config.logoSize.width} × {config.logoSize.height} px
-                </output>
             </div>
 
             <div className="toolbar-actions">

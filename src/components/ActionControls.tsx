@@ -1,14 +1,19 @@
 'use client';
 
 import React from 'react';
-import { Command, CornerDownLeft, Redo2, Undo2 } from 'lucide-react';
+import { CornerDownLeft, Redo2, Undo2 } from 'lucide-react';
 
+interface Props {
+  sectionNumber?: number;
+}
 
-export const ActionControls: React.FC = () => {
+export const ActionControls: React.FC<Props> = ({ sectionNumber }) => {
   return (
     <div className="shortcut-panel">
       <div className="section-heading">
-        <Command size={17} aria-hidden="true" />
+        {sectionNumber != null && (
+          <span className="section-number" aria-hidden="true">{String(sectionNumber).padStart(2, '0')}</span>
+        )}
         <h2 className="section-title">快捷操作</h2>
       </div>
 

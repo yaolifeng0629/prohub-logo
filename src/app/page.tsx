@@ -9,7 +9,6 @@ import { createLogoCanvas } from '@/lib/logo-renderer';
 
 export default function Home() {
   const { undo, redo, config } = useLogoStore();
-  const [scale, setScale] = useState(1);
   const [comparisonConfig, setComparisonConfig] = useState<LogoConfig | null>(null);
 
   // Quick export function
@@ -58,23 +57,20 @@ export default function Home() {
         <header className="toolbar-shell">
           <div className="brand-lockup" aria-label="ProHub Logo Studio">
             <span className="brand-mark" aria-hidden="true">
-              <i />
-              <i />
+              {/* 内联 SVG 品牌标不需要 next/image 优化 */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.svg" alt="" width="29" height="29" />
             </span>
             <span className="brand-copy">
               <strong>PROHUB</strong>
-              <small>LOGO STUDIO</small>
+              <small>Logo Studio</small>
             </span>
           </div>
-          <Toolbar
-            scale={scale}
-            onScaleChange={setScale}
-            onComparisonChange={setComparisonConfig}
-          />
+          <Toolbar onComparisonChange={setComparisonConfig} />
         </header>
 
         <div className="preview-shell">
-          <PreviewPanel scale={scale} comparisonConfig={comparisonConfig ?? undefined} />
+          <PreviewPanel scale={1} comparisonConfig={comparisonConfig ?? undefined} />
         </div>
 
         <footer className="workspace-footer">
@@ -83,7 +79,7 @@ export default function Home() {
             <a href="https://yaolifeng.com" target="_blank" rel="noopener noreferrer">
               yaolifeng
             </a>
-            <span aria-hidden="true"> / </span>
+            <span aria-hidden="true"> · </span>
             <span>ProHub Logo Studio</span>
           </p>
         </footer>

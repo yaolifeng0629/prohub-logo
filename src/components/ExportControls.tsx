@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Download } from 'lucide-react';
+import { ArrowDownToLine } from 'lucide-react';
 import { ExportModal } from './ExportModal';
 
 export const ExportControls: React.FC = () => {
@@ -15,8 +15,12 @@ export const ExportControls: React.FC = () => {
         className="export-button"
         aria-label="导出 Logo"
       >
-        <Download size={17} strokeWidth={2.25} aria-hidden="true" />
         <span>导出</span>
+        {/* slide-through swap: 箭头下滑离场，副本自上方落入（300ms） */}
+        <span className="icon-swap" aria-hidden="true">
+          <ArrowDownToLine size={16} strokeWidth={2.25} />
+          <ArrowDownToLine size={16} strokeWidth={2.25} />
+        </span>
       </button>
 
       <ExportModal

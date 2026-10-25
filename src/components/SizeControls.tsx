@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Frame } from 'lucide-react';
 import { useLogoStore } from '@/store/logoStore';
 
 const PRESET_SIZES = [
@@ -11,7 +10,11 @@ const PRESET_SIZES = [
   { label: '512x512', width: 512, height: 512 },
 ];
 
-export const SizeControls: React.FC = () => {
+interface Props {
+  sectionNumber?: number;
+}
+
+export const SizeControls: React.FC<Props> = ({ sectionNumber }) => {
   const { config, updateConfig } = useLogoStore();
   const [customSize, setCustomSize] = useState(false);
 
@@ -31,7 +34,9 @@ export const SizeControls: React.FC = () => {
   return (
     <div className="control-group">
       <div className="section-heading">
-        <Frame size={17} aria-hidden="true" />
+        {sectionNumber != null && (
+          <span className="section-number" aria-hidden="true">{String(sectionNumber).padStart(2, '0')}</span>
+        )}
         <h2 id="size-controls-heading" className="section-title">画布</h2>
       </div>
 

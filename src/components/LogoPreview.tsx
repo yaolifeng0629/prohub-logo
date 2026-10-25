@@ -7,11 +7,13 @@ import { drawLogo } from '@/lib/logo-renderer';
 interface LogoPreviewProps {
   scale?: number;
   config?: LogoConfig;
+  mode?: 'live' | 'compare';
 }
 
 export const LogoPreview: React.FC<LogoPreviewProps> = ({
   scale = 1,
   config: previewConfig,
+  mode = 'live',
 }) => {
   const { config: storeConfig } = useLogoStore();
   const config = previewConfig ?? storeConfig;
@@ -53,6 +55,7 @@ export const LogoPreview: React.FC<LogoPreviewProps> = ({
       <div
         key={canvasKey}
         className="logo-canvas-frame"
+        data-mode={mode}
         style={{ width: scaledWidth, height: scaledHeight }}
       >
         <canvas

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { CheckCircle2, Download, X } from 'lucide-react';
 import { useLogoStore } from '@/store/logoStore';
 import { createLogoCanvas, createLogoSvg } from '@/lib/logo-renderer';
@@ -112,7 +113,8 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
   ];
   const previewScale = Math.min(0.5, 152 / Math.max(config.logoSize.width, config.logoSize.height));
 
-  return (
+  // Header 的 backdrop-filter 会形成 fixed 定位上下文，弹窗须经 Portal 挂到 body 下
+  return createPortal(
     <div className="export-modal-backdrop">
       <div className="export-modal" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
         <div className="export-modal-header">
@@ -215,6 +217,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
